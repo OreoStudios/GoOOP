@@ -8,7 +8,7 @@ import (
 )
 
 func TestAnonymousMethodSignatureTypes(t *testing.T) {
-    src := `package main
+	src := `package main
 class Holder {
     Wrap(input struct { Name string }) struct {
         Name string
