@@ -14,9 +14,7 @@ jobs:
           go-version-file: go.mod
           cache: true
       - name: Format check
-        run: |
-          gofmt -d internal/compiler/anonymous_signatures_test.go
-          test -z "$(gofmt -l cmd internal)"
+        run: test -z "$(gofmt -l cmd internal)"
       - name: Unit and integration tests
         run: go test -race ./...
       - name: Build CLI
