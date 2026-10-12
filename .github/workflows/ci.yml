@@ -15,7 +15,7 @@ jobs:
           cache: true
       - name: Format check
         run: |
-          gofmt -l cmd internal
+          gofmt -d internal/compiler/anonymous_signatures_test.go
           test -z "$(gofmt -l cmd internal)"
       - name: Unit and integration tests
         run: go test -race ./...
