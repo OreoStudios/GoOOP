@@ -622,9 +622,27 @@ func (p *parser) parseMethod(name string, mods map[string]bool) (method, error) 
 	}
 	m := method{name: name, params: strings.TrimSpace(p.src[open.end:close.start]), mods: mods}
 	retStart := p.at
-	for p.at < len(p.toks) && !p.peek("{") && !p.peek(";") && !p.peek("}") {
-		if p.at > retStart && strings.Contains(p.src[p.toks[p.at-1].end:p.toks[p.at].start], "\n") {
-			break
+	// Braces inside anonymous struct/interface return types are not method bodies.
+	round, square, braces := 0, 0, 0
+	for p.at < len(p.toks) {
+		next := p.toks[p.at].value
+		anonymous := next == "{" && p.at > retStart &&
+			(p.toks[p.at-1].value == "struct" || p.toks[p.at-1].value == "interface")
+		if round == 0 && square == 0 && braces == 0 {
+			if next == ";" || next == "}" || (next == "{" && !anonymous) {
+				break
+			}
+			if p.at > retStart && !anonymous && strings.Contains(p.src[p.toks[p.at-1].end:p.toks[p.at].start], "\n") {
+				break
+			}
+		}
+		switch next {
+		case "(": round++
+		case ")": round--
+		case "[": square++
+		case "]": square--
+		case "{": braces++
+		case "}": if braces > 0 { braces-- }
 		}
 		p.at++
 	}
