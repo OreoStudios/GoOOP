@@ -637,12 +637,20 @@ func (p *parser) parseMethod(name string, mods map[string]bool) (method, error) 
 			}
 		}
 		switch next {
-		case "(": round++
-		case ")": round--
-		case "[": square++
-		case "]": square--
-		case "{": braces++
-		case "}": if braces > 0 { braces-- }
+		case "(":
+			round++
+		case ")":
+			round--
+		case "[":
+			square++
+		case "]":
+			square--
+		case "{":
+			braces++
+		case "}":
+			if braces > 0 {
+				braces--
+			}
 		}
 		p.at++
 	}
