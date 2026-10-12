@@ -1,10 +1,10 @@
 package compiler
 
 import (
-    "os"
-    "os/exec"
-    "path/filepath"
-    "testing"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"testing"
 )
 
 func TestAnonymousMethodSignatureTypes(t *testing.T) {
@@ -30,21 +30,21 @@ func main() {
     _ = h.Lookup()
     _, _ = h.Pair()
 }
-`
-    out, err := Compile("anonymous.goop", []byte(src))
-    if err != nil {
-        t.Fatalf("transpile anonymous signatures: %v", err)
-    }
-    dir := t.TempDir()
-    if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example.org/anonymous\n\ngo 1.22\n"), 0644); err != nil {
-        t.Fatal(err)
-    }
-    if err := os.WriteFile(filepath.Join(dir, "anonymous.go"), out, 0644); err != nil {
-        t.Fatal(err)
-    }
-    cmd := exec.Command("go", "run", ".")
-    cmd.Dir = dir
-    if output, err := cmd.CombinedOutput(); err != nil {
-        t.Fatalf("generated code does not build: %v\n%s", err, output)
-    }
+	`
+	out, err := Compile("anonymous.goop", []byte(src))
+	if err != nil {
+		t.Fatalf("transpile anonymous signatures: %v", err)
+	}
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example.org/anonymous\n\ngo 1.22\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "anonymous.go"), out, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	cmd := exec.Command("go", "run", ".")
+	cmd.Dir = dir
+	if output, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("generated code does not build: %v\n%s", err, output)
+	}
 }
